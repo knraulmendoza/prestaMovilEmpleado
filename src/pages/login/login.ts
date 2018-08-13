@@ -1,22 +1,14 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Network } from "@ionic-native/network";
-import { Toast } from "@ionic-native/toast";
-import {
-  IonicPage,
-  NavController,
-  NavParams,
-  Nav,
-  LoadingController,
-  ToastController
-} from "ionic-angular";
-import { AngularFireAuth } from "angularfire2/auth";
-
-import { MenuPage } from "../tabPrincipal/menu/menu";
-import { LogueoService } from "../../services/logueo.service";
-import { iCobro, iPagos } from "../../interfaces/interfaces";
-import { GlobalService } from "../../services/globales.service";
-import { BdService } from "../../services/bd.service";
+import { Toast, } from "@ionic-native/toast";
+import { IonicPage, NavController, NavParams, Nav , LoadingController, ToastController} from 'ionic-angular';
+import { FirebaseMessaging } from '@ionic-native/firebase-messaging';
+import { LogueoService } from '../../services/logueo.service';
+import { GlobalService } from '../../services/globales.service';
+import { BdService } from '../../services/bd.service';
+import { Device } from '@ionic-native/device';
+import { iCobro } from '../../interfaces/interfaces';
 /**
  * Generated class for the LoginPage page.
  *
@@ -26,79 +18,74 @@ import { BdService } from "../../services/bd.service";
 
 @IonicPage()
 @Component({
-  selector: "page-login",
-  templateUrl: "login.html"
+  selector: 'page-login',
+  templateUrl: 'login.html',
 })
 export class LoginPage {
+
   // rootNavCtrl: NavController;
-  conexion: boolean = true;
-  @ViewChild("myNav") nav: Nav;
+  conexion:boolean=true;
+  @ViewChild('myNav') nav: Nav;
   rootNavCtrl: NavController;
   // user = {} as User;
   focu: boolean = false;
-  public formLogin: FormGroup;
+  public formLogin:FormGroup;
   // user: string;
   // pass: string;
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public loading: LoadingController,
-    // private aouth: AngularFireAuth,
     public toast: ToastController,
     public build: FormBuilder,
-    private network: Network,
-    private toastNative: Toast,
-    public globalSer: GlobalService,
-    public db: BdService,
-    public logueoSer: LogueoService
-  ) {
-    this.rootNavCtrl = navParams.get("rootNavCtrl");
-    this.formLogin = build.group({
-      user: ["", Validators.compose([Validators.required])],
-      password: ["", Validators.compose([Validators.required])]
-    });
-    // this.rootNavCtrl = navParams.get('rootNavCtrl');
+    private network:Network,
+    private toastNative:Toast,
+    public globalSer:GlobalService,
+    public db:BdService,
+    public firebaseMsg: FirebaseMessaging,
+    public device:Device,
+    public logueoSer:LogueoService) {
+      this.rootNavCtrl = navParams.get('rootNavCtrl');
+      this.formLogin = build.group({
+        user:['',Validators.compose([Validators.required])],
+        password:['',Validators.compose([Validators.required,Validators.minLength(6)])]
+      });
   }
-  ionViewDidEnter() {
+  ionViewDidEnter(){
     // console.log(this.logueoSer.uid.uid);
-
-    this.network.onConnect().subscribe(
-      data => {
-        this.conexion = true;
-        this.toast
-          .create({
-            message: "conectado",
-            duration: 3000,
-            cssClass: "toast-success"
-          })
-          .present();
-      },
-      error => console.error("error")
-    );
-    this.network.onDisconnect().subscribe(
-      data => {
-        this.conexion = false;
-        this.toast
-          .create({
-            message: "Conectese a internet",
-            duration: 8000,
-            cssClass: "toast-error"
-          })
-          .present();
-      },
-      error => console.error("error")
-    );
+    
+    this.network.onConnect().subscribe(data=>{
+      this.conexion=true;
+      this.toast.create({
+        message:'conectado',
+        duration:3000,
+        cssClass:'toast-success'
+      }).present();
+    },error=>console.error('error'));
+    this.network.onDisconnect().subscribe(data=>{
+      this.conexion=false;
+      this.toast.create({
+        message:'Conectese a internet',
+        duration:8000,
+        cssClass:'toast-error'
+      }).present();
+    },error=>console.error('error'));
   }
-
-  toastMensaje(msg: string, duration: number) {
-    this.toast
-      .create({
-        message: msg, //"Este usuario no puede ingresar en esta app",
-        duration: duration
-      })
-      .present();
+  getToken() {
+    this.firebaseMsg.getToken().then((_token) => {
+      let token = {
+        token: _token,
+        rol: 2,
+        modelo: this.device.model,
+        device: this.device.manufacturer
+      }
+      console.log(`token: ${_token} y jsonToken: ${token.token}`);
+      this.db.add('devices',token,2,_token).then(() => {
+        console.log('funciono')
+      }).catch((err) => console.log(err));
+    })
+    
   }
-
   public logueo() {
     let user = `${this.formLogin.get("user").value}@gmail.com`;
     let pass = this.formLogin.get("password").value;
@@ -119,7 +106,7 @@ export class LoginPage {
                 });
                 cargar.present().then(() => {
                   setTimeout(() => {
-                    this.navCtrl.setRoot(MenuPage);
+                    this.getToken();
                     cargar.dismiss();
                   }, 5000);
                 });
@@ -144,6 +131,44 @@ export class LoginPage {
         this.toastMensaje("Usuario incorrecto", 3000);
       });
   }
+  toastMensaje(msg:string,key:number){
+    // let background_color:string='';
+    // let text_color:string='';
+    // switch (key) {
+    //   case 1:
+    //     background_color='#02E81D';
+    //     text_color='#fff';
+    //     break;
+    //   case 2:
+    //     background_color='#FF1429'
+    //     text_color='#fff';
+    //     break;
+    //   case 3:
+    //     background_color='#fff';
+    //     text_color='#02E81D';
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // let opciones: ToastOptions = {
+    //   message: msg,
+    //   position:'bottom',
+    //   styling: {
+    //     backgroundColor:'#fff',
+    //     textColor:'#02E81D',
+    //   }
+    // }
+    // this.toastNative.showWithOptions({
+    //   message: msg,
+    //   duration:3000,
+    //   position:'bottom',
+    //   styling: {
+    //     backgroundColor:'#fff',
+    //     textColor:'#02E81D',
+    //   }
+    // }).subscribe((toast)=>{console.log(toast)});
+    this.toastNative.show(msg,'3000','bottom').subscribe((toast)=>{console.log(toast)})
+  }
 
   /**
    * focus
@@ -154,7 +179,8 @@ export class LoginPage {
   /**
    *  desenfoque
    */
-  public desenfoque() {
+  public  desenfoque() {
     this.focu = false;
   }
+
 }

@@ -8,21 +8,20 @@
 <ion-content>
   <div *ngIf="!focu" class="header" text-center>
     <div>
-        <h1>PrestaMovil</h1>
-        <p>Asesor</p>
+        <h1 ion-text color="light">PrestaMovil</h1>
+        <p ion-text color="light">Empleado</p>
     </div>
   </div>
-
   <div *ngIf="focu" text-center>
     <h1>PrestaMovil</h1>
   </div>
-  <div class="contenido" padding>
+  <div class="contenido" padding-left padding-right>
     <form [formGroup]="formLogin" (submit)="logueo()" novalidate>
       <ion-list>
         <ion-item class="fondoTransparente">
           <ion-label floating>Usuario</ion-label>
           <ion-input 
-            type="text" 
+            type="text"
             formControlName="user"
             [class.invalido]="!formLogin.controls.user.valid && formLogin.controls.user.dirty"
             (ionFocus)="enfoque()" 
@@ -38,12 +37,13 @@
           <ion-label floating>Contraseña</ion-label>
           <ion-input type="password" formControlName="password" (ionFocus)="focu=true" (ionBlur)="desenfoque()"></ion-input>
         </ion-item>
+        <div *ngIf="!formLogin.controls.password.valid && formLogin.controls.password.dirty">
+          <p padding-left ion-text color="danger">
+            La contraseña debe tener minimo 6 caracteres
+          </p>
+        </div>
       </ion-list>
-      <button ion-button block [disabled]="!formLogin.valid">Iniciar Sesión</button>
+      <button ion-button block round [disabled]="!formLogin.valid" class="boton-minuscula">Iniciar sesión</button>
     </form>
-    <div text-center>
-        <button ion-button clear (click)="cambiarPassword()" text-center>¿Olvido su contraseña?</button>
-    </div>
-    <!-- <button ion-button (click)="loginGoogle()" text-center>Login google</button> -->
   </div>
 </ion-content>

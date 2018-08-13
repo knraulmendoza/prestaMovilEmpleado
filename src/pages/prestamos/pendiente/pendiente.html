@@ -1,9 +1,3 @@
-<!--
-  Generated template for the PendientePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
   <ion-navbar color="primary">
     <button ion-button menuToggle icon-only>
@@ -29,7 +23,7 @@
 <ion-content>
       <ion-list>
         <ng-container *ngFor="let cliente of pendientesAux; let i = index">
-          <ion-item (tap)="openPrestamo(cliente,i)" (press)="selectList(cliente)" style="padding-top: 0px !important;padding-bottom: 0px !important">
+          <ion-item (tap)="openPrestamo(cliente,i)" style="padding-top: 0px !important;padding-bottom: 0px !important">
             <ion-row>
               <ion-col col-8>
                 {{cliente.name}} {{cliente.lastName}}
@@ -46,13 +40,17 @@
                   </p>
                 </ion-col>
                 <ion-col col-7 align-self-end>
-                  <p ion-text color="primary" *ngIf="!prestamo.pago && prestamo.resta != 0">Faltan {{restarFecha(prestamo.fechaFin,fechaActual)}} dias
+                  <p ion-text color="primary" *ngIf="!prestamo.pago && prestamo.resta != 0 && restarFecha(prestamo.fechaFin,fechaActual) > 0">Faltan {{restarFecha(prestamo.fechaFin,fechaActual)}} dias
                     <strong *ngIf="prestamo.fechaInicio==fechaActual">(Nuevo)</strong>
+                  </p>
+                  <p ion-text color="danger" *ngIf="restarFecha(prestamo.fechaFin,fechaActual) < 0">
+                    Atrasado {{absNum(diasFaltantes)}} dias
                   </p>
                   <p ion-text color="pago" *ngIf="prestamo.pago">
                     Pago {{prestamo.pago | currency:"$":true:"1.0"}}
                     <strong *ngIf="prestamo.fechaInicio==fechaActual">(Nuevo)</strong>
-                    <strong ion-text color="danger" *ngIf="prestamo.resta==0">(Cancelado)</strong></p>
+                    <strong ion-text color="danger" *ngIf="prestamo.resta==0">(Cancelado)</strong>
+                  </p>
                   <!-- <p ion-text color="danger" *ngIf="prestamo.resta">Cancelado</p> -->
                 </ion-col>
               </ng-container>

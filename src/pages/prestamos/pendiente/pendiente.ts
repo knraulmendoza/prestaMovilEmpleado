@@ -35,7 +35,8 @@ export class PendientePage {
   search: string = "";
   fechaActual = `${new Date().getDate()}/${new Date().getMonth() +
     1}/${new Date().getFullYear()}`;
-  resta:number;
+  // resta:number;
+  diasFaltantes:number;
   constructor(
     public app: App,
     public navCtrl: NavController,
@@ -53,18 +54,23 @@ export class PendientePage {
       this.listaClientes();
     });
   }
+  public absNum(num:number): number{
+    return Math.abs(num);
+  }
 
-  public restarFecha(f1, f2) {
+  public restarFecha(f1, f2): number{
+    this.diasFaltantes=0;
     var aFecha1 = f1.split("/");
     var aFecha2 = f2.split("/");
     var fFecha1 = Date.UTC(aFecha1[2], aFecha1[1] - 1, aFecha1[0]);
     var fFecha2 = Date.UTC(aFecha2[2], aFecha2[1] - 1, aFecha2[0]);
     var dif = fFecha1 - fFecha2;
     var dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+    this.diasFaltantes = dias;
     return dias;
   }
 
-  buscarCLiente(cli: iUsuario, pres: iPrestamos, resta:number,pago: number) {
+  buscarCLiente(cli: iUsuario, pres: iPrestamos,resta:number, pago:number) {
     let bandera = {cli:false,pres:false};
     let prestamo;
     let ind = {cli:-1,pres:-1};
@@ -105,8 +111,6 @@ export class PendientePage {
       cli.prestamos.push(prestamo);
       this.pendientes.push(cli);
     }
-
-    // return bandera;
   }
 
   public llenarPendientes(cli: iUsuario, pres: iPrestamos, canc: boolean) {
@@ -118,7 +122,7 @@ export class PendientePage {
           if (pagado.fechaPago != this.fechaActual) {
             //prestamos pendientes
             if (!canc) {
-              this.buscarCLiente(cli, pres,pagado.resta,null);
+              this.buscarCLiente(cli, pres, pagado.resta,null);
             }
           } else {
             if (canc) {
@@ -156,6 +160,7 @@ export class PendientePage {
               });
               if (!ban) clien.push(cli);
             }
+
             this.llenarPendientes(cli, pres, false);
           } else this.llenarPendientes(cli, pres, true);
         });

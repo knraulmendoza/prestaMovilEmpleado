@@ -30,7 +30,7 @@
                 <ion-option *ngFor="let prestamo of prestamos; let i = index" value="{{prestamo.id}}">{{prestamo.countPrestamo}} ({{prestamo.fechaInicio}})</ion-option>
             </ion-select>
         </ion-item>
-        <p><strong>Nombre:</strong> {{ cliente.name }} {{cliente.lastName}}</p>
+        <p><strong>Cliente:</strong> {{ cliente.name }} {{cliente.lastName}}</p>
         <div *ngIf="prestamo">
             <p><strong>Cantidad:</strong> {{prestamo[0].countPrestamo | currency:"$":true:"1.0"}}</p>
             <p><strong>Plazo:</strong> {{prestamo[0].plazo}} dias</p>
@@ -41,7 +41,7 @@
             <button ion-button block (click)="pagar()">Pagar</button>
         </div>
         <div *ngIf="pagos.length != 0">
-            <button ion-button block (click)="pagar()" [disabled]="pagos[pagos.length - 1].fechaPago == fecha">Pagar</button>
+            <button ion-button block round (click)="pagar()" [disabled]="pagos[pagos.length - 1].fechaPago == fecha">Pagar</button>
         </div>
        <!-- <h1 ion-text text-center color="primary" *ngIf="pagos[pagos.length-1].fechaPago==fecha">Pago</h1> -->
       </div>

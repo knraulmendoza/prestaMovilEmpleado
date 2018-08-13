@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController, AlertController } from 'ionic-angular';
+import { NavController, ToastController, AlertController, Events } from 'ionic-angular';
 import { BdService } from '../../../services/bd.service';
 import { GlobalService } from '../../../services/globales.service';
 import { iUsuario,iPrestamos,iPagos,iCuadre, iGastos } from '../../../interfaces/interfaces';
@@ -22,19 +22,23 @@ export class CuadrePage {
     public db: BdService,
     public globalSer: GlobalService,
     public toast:ToastController,
-    public alerta:AlertController
+    public alerta:AlertController,
+    public event: Events
   ) {
     this.fechaHoy=`${this.fecha.getDate()}/${this.fecha.getMonth()+1}/${this.fecha.getFullYear()}`;
     this.fecha.setDate(this.fecha.getDate()+1);
     this.fechaManiana=`${this.fecha.getDate()}/${this.fecha.getMonth()+1}/${this.fecha.getFullYear()}`;
+    event.subscribe("reloadDetails", () => {
+      //call methods to refresh content
+      this.countClientes();
+    });
     this.countClientes();
   }
   public countClientes(){
     this.db.selectWhere('cuadre','cobro',this.globalSer.getCobro.id,1).subscribe((res:iCuadre[])=>{
       let gasto:number=0;
-      if (res.length >0) {
-        let cuadre:iCuadre=res[res.length-1];
-        if (cuadre.fecha == "") {
+      res.forEach(cuadre => {
+        if (cuadre.fecha === '') {
           cuadre.gastos.forEach((gast:iGastos) => {
             gasto+=gast.dinero;
           });
@@ -46,7 +50,8 @@ export class CuadrePage {
             this.total = (cuadre.baseInicial-cuadre.prestados-gasto)+cuadre.abonados;
           }
         }
-      }
+      });
+      console.log(gasto)
       this.db.selectWhere('cliente','cobro',this.globalSer.getCobro.id,1).subscribe((cliList)=>{
         this.dinero=[0,0,(gasto/1000),(this.globalSer.getCuadre.baseInicial/1000),0,0];
         this.count=[0,0,0,0];
@@ -62,9 +67,6 @@ export class CuadrePage {
               tablaPago.ref.get().then(ok => {
                 if (ok.exists) {
                   tablaPago.valueChanges().subscribe(res => {
-                    // this.dinero[0]=0;
-                    // this.count[0]=0
-                    // this.count[1]=0
                     if (res.pagos) {
                       let pagado: iPagos = res.pagos[res.pagos.length - 1];
                       if (pagado.fechaPago == this.fechaHoy) {
@@ -87,8 +89,7 @@ export class CuadrePage {
     
   }
   ionViewDidEnter() {
-    
-    this.db.selectWhere('cuadre','cobro',this.globalSer.getCobro.id,2,'fecha',this.globalSer.getCuadre.fecha).subscribe((res:iCuadre[])=>{
+    this.db.selectWhere('cuadre','cobro',this.globalSer.getCobro.id,2,'fecha','').subscribe((res:iCuadre[])=>{
       this.dinero[2]=0;
       if(res.length > 0 ) {
         let gasto:iGastos[]=[];
