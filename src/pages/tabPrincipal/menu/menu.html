@@ -1,0 +1,21 @@
+<ion-menu [content]="content">
+    <ion-header no-border>
+      <ion-toolbar color="secondary">
+        <ion-title>{{getCobro}}</ion-title>
+      </ion-toolbar> 
+    </ion-header>
+    <ion-content>
+      <ion-list no-lines>
+        <ng-container>
+          <button  ion-item *ngFor="let page of listaPages" (click)="showPage(page.component)" menuClose>
+            <ion-icon name="home" item-end color="secondary"></ion-icon>
+            {{page.titulo}}
+          </button>
+        </ng-container>
+      </ion-list>
+    </ion-content>
+    <ion-footer color="light">
+        <button ion-item (click)="cerrarSesion()">salir <i item-end style="font-size: 25px" class="fas fa-sign-out-alt"></i></button>
+    </ion-footer>
+</ion-menu>
+<ion-nav #content [root]="rootPage"></ion-nav>

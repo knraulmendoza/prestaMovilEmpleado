@@ -1,0 +1,50 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <button ion-button menuToggle icon-only>
+            <ion-icon name='menu'></ion-icon>
+        </button>
+        <ion-title>Cuadre {{fechaHoy}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only clear (click)="countClientes()"><ion-icon name="refresh"></ion-icon></button>
+          <button ion-button color="light" outline (click)="openGastos()">Gastos</button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-grid>
+        <ion-row style="border-bottom: 1px solid grey">
+            <ion-col ion-text color="gris" class="tamanio-title">Descripción</ion-col>
+            <ion-col ion-text color="gris" class="tamanio-title alinear-right">Valor</ion-col>
+            <ion-col ion-text color="gris" class="tamanio-title" style="text-align: center">Cantidad</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>Abonados</ion-col>
+            <ion-col class="alinear-right">{{dinero[0] | currency:"$":true:"1.0"}}</ion-col>
+            <ion-col ion-text color="secondary" style="text-align: right">{{count[0]}} <strong>({{count[1]}})</strong></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>Prestado</ion-col>
+            <ion-col class="alinear-right">{{dinero[1] | currency:"$":true:"1.0"}}</ion-col>
+            <ion-col ion-text color="secondary" style="text-align: right">{{count[2]}} <strong>({{count[3]}})</strong></ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col col-4>Gastos</ion-col>
+            <ion-col col-4 class="alinear-right">{{dinero[2] | currency:"$":true:"1.0"}}</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col col-4>Base</ion-col>
+            <ion-col col-4 class="alinear-right">{{dinero[3] | currency:"$":true:"1.0"}}</ion-col>
+        </ion-row>
+        <!-- <ion-row>
+            <ion-col col-4>Faltante</ion-col>
+            <ion-col col-4 ion-text class="alinear-right">{{dinero[4] | currency:"$":true:"1.0"}}</ion-col>
+        </ion-row> -->
+        <ion-row style="border-top: 1px solid grey;border-bottom: 1px solid grey;align-items: center" center>
+            <ion-col ion-text color="gris" class="tamanio-title">Total</ion-col>
+            <ion-col ion-text color="pago" class="tamanio-title alinear-right">{{dinero[5] | currency:"$":true:"1.0"}}</ion-col>
+            <ion-col style="text-align: center"><button ion-button icon-only clear (click)="saveCuadre()"><i class="material-icons">save</i></button></ion-col>
+        </ion-row>
+    </ion-grid>
+    <p>Próxima Base: {{fechaManiana}}</p>
+    <p>Valor Base: {{(total/1000) | currency:"$":true:"1.0"}}</p>
+</ion-content>

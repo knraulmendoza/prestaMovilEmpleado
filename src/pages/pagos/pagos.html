@@ -1,0 +1,91 @@
+<!--
+  Generated template for the PagosPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton color="primary">
+      <ion-buttons left>
+          <button ion-button (click)="cerrar()" royal>
+            <span ion-text color="primary" showWhen="ios">Cancel</span>
+            <ion-icon class="size-icon" name="md-arrow-back" showWhen="android,windows"></ion-icon>
+          </button>
+      </ion-buttons>
+    <ion-title>pagos</ion-title>
+    
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div [ngSwitch]="menu">
+      <div *ngSwitchCase="'pagos'">
+        <ion-item *ngIf="prestamos.length > 1">
+            <ion-label>Prestamos</ion-label>
+            <!-- (ionSelect)="selectPrestamo($event)" -->
+            <ion-select (ionChange)="selectPrestamo($event)" [(ngModel)]="selecPrestamo">
+                <ion-option *ngFor="let prestamo of prestamos; let i = index" value="{{prestamo.id}}">{{prestamo.countPrestamo}} ({{prestamo.fechaInicio}})</ion-option>
+            </ion-select>
+        </ion-item>
+        <p><strong>Nombre:</strong> {{ cliente.name }} {{cliente.lastName}}</p>
+        <div *ngIf="prestamo">
+            <p><strong>Cantidad:</strong> {{prestamo[0].countPrestamo | currency:"$":true:"1.0"}}</p>
+            <p><strong>Plazo:</strong> {{prestamo[0].plazo}} dias</p>
+            <p><strong>Fecha Inicial:</strong> {{prestamo[0].fechaInicio}}</p>
+            <p><strong>Fecha Final:</strong> {{prestamo[0].fechaFin}}</p>
+        </div>
+        <div *ngIf="pagos.length == 0">
+            <button ion-button block (click)="pagar()">Pagar</button>
+        </div>
+        <div *ngIf="pagos.length != 0">
+            <button ion-button block (click)="pagar()" [disabled]="pagos[pagos.length - 1].fechaPago == fecha">Pagar</button>
+        </div>
+       <!-- <h1 ion-text text-center color="primary" *ngIf="pagos[pagos.length-1].fechaPago==fecha">Pago</h1> -->
+      </div>
+      <div *ngSwitchCase="'cuotas'">
+          <ion-grid>
+              <ion-row center>
+                <ion-col style="text-align: center">Fecha</ion-col>
+                <ion-col style="text-align: center">Abono</ion-col>
+                <ion-col style="text-align: center">Restante</ion-col>
+              </ion-row>
+              <div class="altura">
+                <ion-list>
+                  <ion-item-sliding  *ngFor="let pago of pagos; let i = index">
+                    <ion-item>
+                        <ion-row center>
+                            <ion-col style="text-align: left">{{pago.fechaPago}}</ion-col>
+                            <ion-col style="text-align: right">{{pago.pago | currency:"$":true:"1.0"}}</ion-col>
+                            <ion-col style="text-align: right">{{pago.resta | currency:"$":true:"1.0"}}</ion-col>
+                        </ion-row>
+                    </ion-item>
+                    <ion-item-options side="left" (ionSwipe)="delete(i)">
+                        <button ion-button color="danger" icon-only expandable (click)="delete(i)">
+                            <ion-icon name="trash"></ion-icon>
+                        </button>
+                    </ion-item-options>
+                    <ion-item-options side="right" (ionSwipe)="editar(pago)">
+                        <button ion-button color="secondary" icon-only expandable (click)="editar(pago)" padding="none">
+                            <ion-icon name="create" ></ion-icon>
+                        </button>
+                    </ion-item-options>
+                  </ion-item-sliding>
+                </ion-list>
+              </div>
+            </ion-grid>
+      </div>
+    </div>
+    <ion-footer>
+        <ion-segment [(ngModel)]="menu">
+            <ion-segment-button value="pagos">
+              Pagos
+            </ion-segment-button>
+            <ion-segment-button value="cuotas">
+              Cuotas
+            </ion-segment-button>
+        </ion-segment>
+    </ion-footer>
+</ion-content>
