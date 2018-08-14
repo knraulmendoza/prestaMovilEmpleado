@@ -98,13 +98,13 @@ export class LoginPage {
                 token.users.push({rol:2,user:_user,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`});
                 console.log(token.users);
               }
-              this.db.add('devices',token,2,_token).then(() => {
+              this.db.add('devices',token,2,this.device.uuid).then(() => {
                 console.log('funciono')
               }).catch((err) => console.log(err));
           });
         }else{
           console.log('la tabla no existe');
-          this.db.add('devices',token,2,_token).then(() => {
+          this.db.add('devices',token,2,this.device.uuid).then(() => {
             console.log('funciono')
           }).catch((err) => console.log(err));
         }

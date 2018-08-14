@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="ionic.prestamovil.empleado" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="prestamovil.empleado" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>prestaMovil</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="kenne_8@outlook.es" href="http://ionicframework.com/">kenneth mendoza</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.15:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -83,6 +83,7 @@
     <plugin name="cordova-plugin-ionic-keyboard" spec="2.0.5" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
-    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-firebase-messaging" spec="^1.1.1" />
+    <allow-navigation href="http://192.168.1.15:8100" />
+    <engine name="android" spec="7.0.0" />
 </widget>

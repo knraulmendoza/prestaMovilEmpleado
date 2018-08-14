@@ -77,7 +77,6 @@ export class MyApp {
               state = false;
             }
           }
-          console.log(this.globalSer.getCobro);
         });
       }
     });
