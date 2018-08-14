@@ -71,18 +71,44 @@ export class LoginPage {
       }).present();
     },error=>console.error('error'));
   }
-  getToken() {
+  buscarUser(userList,user){
+    let bandera=false;
+    userList.forEach(element => {
+      if (element.user === user) {
+        bandera = true;
+      }
+    });
+    return bandera;
+  }
+  getToken(_user) {
     this.firebaseMsg.getToken().then((_token) => {
       let token = {
         token: _token,
-        rol: 2,
+        users: [{rol:2,user:_user,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`}],
         modelo: this.device.model,
-        device: this.device.manufacturer
+        device: this.device.manufacturer,
       }
-      console.log(`token: ${_token} y jsonToken: ${token.token}`);
-      this.db.add('devices',token,2,_token).then(() => {
-        console.log('funciono')
-      }).catch((err) => console.log(err));
+      let tablaDevice = this.db.getDatos('devices',_token,1);
+      tablaDevice.ref.get().then(ok => {
+        if (ok.exists) {
+          tablaDevice.valueChanges().subscribe(res => {
+              console.log('existe');
+              token = res;
+              if (!this.buscarUser(res.users,_user)) {
+                token.users.push({rol:2,user:_user,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`});
+                console.log(token.users);
+              }
+              this.db.add('devices',token,2,_token).then(() => {
+                console.log('funciono')
+              }).catch((err) => console.log(err));
+          });
+        }else{
+          console.log('la tabla no existe');
+          this.db.add('devices',token,2,_token).then(() => {
+            console.log('funciono')
+          }).catch((err) => console.log(err));
+        }
+      });
     })
     
   }
@@ -104,9 +130,9 @@ export class LoginPage {
                   content: "Cargando Espere...",
                   duration: 4000
                 });
+                this.getToken(res.name);
                 cargar.present().then(() => {
                   setTimeout(() => {
-                    this.getToken();
                     cargar.dismiss();
                   }, 5000);
                 });
@@ -116,7 +142,6 @@ export class LoginPage {
                 } else {
                   this.toastMensaje("Usuario inactivo", 3000);
                   this.logueoSer.cerrarSesion();
-                  this.navCtrl.setRoot(LoginPage);
                   state = false;
                 }
               }
@@ -132,41 +157,6 @@ export class LoginPage {
       });
   }
   toastMensaje(msg:string,key:number){
-    // let background_color:string='';
-    // let text_color:string='';
-    // switch (key) {
-    //   case 1:
-    //     background_color='#02E81D';
-    //     text_color='#fff';
-    //     break;
-    //   case 2:
-    //     background_color='#FF1429'
-    //     text_color='#fff';
-    //     break;
-    //   case 3:
-    //     background_color='#fff';
-    //     text_color='#02E81D';
-    //     break;
-    //   default:
-    //     break;
-    // }
-    // let opciones: ToastOptions = {
-    //   message: msg,
-    //   position:'bottom',
-    //   styling: {
-    //     backgroundColor:'#fff',
-    //     textColor:'#02E81D',
-    //   }
-    // }
-    // this.toastNative.showWithOptions({
-    //   message: msg,
-    //   duration:3000,
-    //   position:'bottom',
-    //   styling: {
-    //     backgroundColor:'#fff',
-    //     textColor:'#02E81D',
-    //   }
-    // }).subscribe((toast)=>{console.log(toast)});
     this.toastNative.show(msg,'3000','bottom').subscribe((toast)=>{console.log(toast)})
   }
 

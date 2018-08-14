@@ -10,7 +10,6 @@ import {
 import { iCobro, iCuadre, iGastos } from "../../../interfaces/interfaces";
 
 import { TabsPage } from "../tabs/tabs";
-import { ShowMenuPage } from "../show-menu/show-menu";
 import { LogueoService } from "../../../services/logueo.service";
 import { LoginPage } from "../../login/login";
 import { GlobalService } from "../../../services/globales.service";
