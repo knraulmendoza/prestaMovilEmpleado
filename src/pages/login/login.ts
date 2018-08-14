@@ -83,19 +83,18 @@ export class LoginPage {
   getToken(_user) {
     this.firebaseMsg.getToken().then((_token) => {
       let token = {
-        token: _token,
-        users: [{rol:2,user:_user,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`}],
+        users: [{rol:2,user:_user,token: _token,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`}],
         modelo: this.device.model,
         device: this.device.manufacturer,
       }
-      let tablaDevice = this.db.getDatos('devices',_token,1);
+      let tablaDevice = this.db.getDatos('devices',this.device.uuid,1);
       tablaDevice.ref.get().then(ok => {
         if (ok.exists) {
           tablaDevice.valueChanges().subscribe(res => {
               console.log('existe');
               token = res;
               if (!this.buscarUser(res.users,_user)) {
-                token.users.push({rol:2,user:_user,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`});
+                token.users.push({rol:2,user:_user,token: _token,fecha : `${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`});
                 console.log(token.users);
               }
               this.db.add('devices',token,2,this.device.uuid).then(() => {
