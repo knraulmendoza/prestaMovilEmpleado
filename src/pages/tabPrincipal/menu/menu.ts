@@ -37,8 +37,8 @@ export class MenuPage {
   listaBotones = [];
   fecha = new Date(); //`${new Date().getDate()}/${new Date().getMonth()+1}/${new Date().getFullYear()}`
   listaPages = [
-    { titulo: "Cobro", component: TabsPage },
-    { titulo: "Clientes", component: ClientesPage }
+    { titulo: "Cobro", component: TabsPage ,icon:'albums'},
+    { titulo: "Clientes", component: ClientesPage ,icon:'contacts'}
   ];
 
   constructor(

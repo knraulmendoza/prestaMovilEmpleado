@@ -6,40 +6,47 @@
 -->
 <ion-header>
 
-  <ion-navbar color="primary">
-    <ion-title>Clientes</ion-title>
-    <button ion-button menuToggle icon-only>
-      <ion-icon name='menu'></ion-icon>
-    </button>
-    <!-- <ion-title>Cobro</ion-title> -->
-  </ion-navbar>
-  <ion-toolbar>
-    <ion-searchbar (ionInput)="searchCLiente()" [(ngModel)]="search" placeholder="Buscar"></ion-searchbar>
-  </ion-toolbar>
-</ion-header>
-<ion-content>
-  <ion-list>
-    <ion-item-group>
-      <ng-container *ngFor="let cliente of clientes;let i = index">
-        <ion-item-divider color="blanco" (click)="abrirCliente(i)">
-          <ion-icon item-left name="arrow-forward" *ngIf="!cliente.open"></ion-icon>
-          <ion-icon item-left name="arrow-down" *ngIf="cliente.open"></ion-icon>
-          <ion-row>
-            <ion-col col-8>{{cliente.name}}</ion-col>
-            <ion-col col-4 text-right>
-              <ion-badge color="gris">{{cliente.prestamos.length}}</ion-badge>
-              <ion-badge color="danger">{{cliente.cancelados}}</ion-badge>
-              <ion-badge>{{cliente.activos}}</ion-badge>
-            </ion-col>
-          </ion-row>
-        </ion-item-divider>
-        <div *ngIf="cliente.open">
-          <ion-item *ngFor="let pres of cliente.prestamos">
-              <ion-label ion-text [class.colorText]="!pro?.state">{{pres.countPrestamo}} <strong ion-text color="danger" *ngIf="pres.resta == 0">Cancelados</strong></ion-label>
+    <ion-navbar color="primary">
+      <ion-title>Clientes</ion-title>
+      <button ion-button menuToggle icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+      <!-- <ion-title>Cobro</ion-title> -->
+    </ion-navbar>
+    <ion-toolbar>
+      <ion-searchbar (ionInput)="searchCLiente()" [(ngModel)]="search" placeholder="Buscar"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list no-lines>
+      <ion-item-group>
+        <ng-container *ngFor="let cliente of clientesAux;let i = index">
+          <ion-item-divider color="blanco" (click)="abrirCliente(i)" [ngClass]="{'section-active': cliente.open, 'section': !cliente.open}">
+            <ion-icon item-left name="arrow-forward" *ngIf="!cliente.open"></ion-icon>
+            <ion-icon item-left name="arrow-down" *ngIf="cliente.open"></ion-icon>
+            <ion-row>
+              <ion-col col-8>{{cliente.name}}</ion-col>
+              <ion-col col-4 text-right>
+                  {{cliente.prestamos.length}}
+                <ion-icon name="checkmark" *ngIf="cliente.activos > 0" color="primary"></ion-icon>
+              </ion-col>
+            </ion-row>
+          </ion-item-divider>
+          <div *ngIf="cliente.open">
+            <ion-card>
+            <ion-item *ngFor="let pres of cliente.prestamos">
+  
+              <ion-label ion-text [class.colorText]="!pro?.state">{{pres.countPrestamo | currency:"$":true:"1.0"}} ({{pres.fechaInicio}})</ion-label>
+  
+              <strong ion-text color="danger" *ngIf="pres.resta == 0" item-end>Cancelados <strong ion-text [color]="mensaje(pres.fechaFin,pres.fechaPago).color">({{mensaje(pres.fechaFin,pres.fechaPago).msg}})</strong></strong>
+              <strong ion-text color="secondary" *ngIf="pres.fechaInicio == dateHoy" item-end>Nuevo</strong>
+              <strong ion-text color="pago" *ngIf="restarFecha(pres.fechaFin,dateHoy) < 0 && pres.resta != 0" item-end>Atrasado</strong>
+              <strong ion-text color="primary" *ngIf="pres.state === false && restarFecha(pres.fechaFin,dateHoy) > 0" item-end>Pendiente</strong>
               <ion-icon *ngIf="pro?.state" name="checkmark" color="secondary" item-end></ion-icon>
-          </ion-item>
-        </div>
-      </ng-container>
-    </ion-item-group>
-  </ion-list>
-</ion-content>
+            </ion-item>
+          </ion-card>
+          </div>
+        </ng-container>
+      </ion-item-group>
+    </ion-list>
+  </ion-content>

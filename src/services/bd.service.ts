@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore,AngularFirestoreCollection,AngularFirestoreDocument } from 'angularfire2/firestore'
-import { iUsuario, iCobro, iPagos } from "../interfaces/interfaces";
-import { Observable } from "rxjs/Observable";
+import { AngularFirestore } from 'angularfire2/firestore'
+import {  iCobro } from "../interfaces/interfaces";
 
 @Injectable()
 

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { iGastos, iCuadre } from '../../interfaces/interfaces';
 import { GlobalService } from '../../services/globales.service';
 import { BdService } from '../../services/bd.service';
+import { Toast } from "@ionic-native/toast";
 
 /**
  * Generated class for the GastosPage page.
@@ -34,15 +35,20 @@ export class GastosPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     public globalSer:GlobalService,
-    public toast:ToastController,
+    public events: Events,
+    public toast:Toast,
     public db:BdService) {
     this.listaGastos = globalSer.showGastos();
     this.fechaHoy=`${this.fecha.getDate()}/${this.fecha.getMonth()+1}/${this.fecha.getFullYear()}`;
     this.listaGasto();
   }
 
+  public mensajeToast(msg:string){
+    this.toast.showShortBottom(msg).subscribe((toast)=>{console.log(toast)});
+  }
+
   public listaGasto(){
-    this.db.selectWhere('cuadre','cobro',this.globalSer.getCobro.id,2,'fecha',this.globalSer.getCuadre.fecha).subscribe((res:iCuadre[])=>{
+    this.db.selectWhere('cuadre','cobro',this.globalSer.getCobro.id,2,'fecha','').subscribe((res:iCuadre[])=>{ 
       if(res.length > 0 ) {
         this.cuadreId = res[0].id;
         let gastos:iGastos[]=[];
@@ -59,7 +65,7 @@ export class GastosPage {
   }
 
   public addGasto(){
-    let gast:iGastos={name:this.otroGasto,dinero:parseInt(this.dinero.toString())};
+    let gast:iGastos={name:this.otroGasto,dinero:parseInt(this.dinero.toString())*1000};
     // this.listaGastos.push(gast)
     
     if (this.globalSer.getCuadre.fecha != this.fechaHoy) {
@@ -69,27 +75,22 @@ export class GastosPage {
       if (this.cuadreId == '') addCuadre = this.db.add('cuadre',cuadre,2,this.db.generarId());
       else addCuadre= this.db.add('cuadre',cuadre,2,this.cuadreId)
       addCuadre.then(()=>{
-        this.toast.create({
-          message:'Gasto registrado correctamente',
-          duration:3000
-        }).present();
+        this.mensajeToast('Gasto registrado correctamente');
       })
       .catch(()=>{
-        this.toast.create({
-          message:'El Gasto no se pudo registrar',
-          duration:3000
-        }).present();
+        this.mensajeToast('El Gasto no se pudo registrar');
       })
     }else {
-      this.toast.create({
-        message:'Ya no puede registrar más gastos',
-        duration:3000
-      }).present();
+      this.mensajeToast('Ya no puede registrar más gastos');
     }
   }
   public selectGasto(e){
     this.gastos.forEach(gas => {
       if (e == gas.id) this.otroGasto = gas.name;
     });
+  }
+  cerrar(){
+    this.events.publish("reloadDetails");
+    this.navCtrl.popToRoot();
   }
 }

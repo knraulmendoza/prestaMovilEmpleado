@@ -1,3 +1,10 @@
 page-clientes {
-
+    .section {
+        background: rgb(210, 206, 206);
+        color: color($colors, dark);
+    }
+    .section-active {
+        background: color($colors, secondary);
+        color: #fff;
+    }
 }

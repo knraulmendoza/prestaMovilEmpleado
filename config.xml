@@ -3,7 +3,7 @@
     <name>prestaMovil</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="kenne_8@outlook.es" href="http://ionicframework.com/">kenneth mendoza</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.11:8100" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -85,5 +85,6 @@
     <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
     <plugin name="cordova-plugin-firebase-messaging" spec="^1.1.1" />
     <allow-navigation href="http://192.168.1.15:8100" />
+    <allow-navigation href="http://192.168.1.11:8100" />
     <engine name="android" spec="7.0.0" />
 </widget>

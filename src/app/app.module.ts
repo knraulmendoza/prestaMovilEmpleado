@@ -15,7 +15,6 @@ import { GastosPage } from '../pages/gastos/gastos';
 import { PendientePage } from '../pages/prestamos/pendiente/pendiente';
 import { NewPrestamoPage } from '../pages/prestamos/new-prestamo/new-prestamo';
 import { CuadrePage } from '../pages/tabPrincipal/cuadre/cuadre';
-import { ShowMenuPage } from '../pages/tabPrincipal/show-menu/show-menu';
 import { TabsPage } from '../pages/tabPrincipal/tabs/tabs';
 import { ClientesPage } from '../pages/clientes/clientes';
 import { MenuPage } from '../pages/tabPrincipal/menu/menu';
@@ -44,7 +43,6 @@ export const firebaseConfig = {
     NewPrestamoPage,
     CuadrePage,
     MenuPage,
-    ShowMenuPage,
     TabsPage,
     ClientesPage,
     PagosPage
@@ -66,7 +64,6 @@ export const firebaseConfig = {
     NewPrestamoPage,
     CuadrePage,
     MenuPage,
-    ShowMenuPage,
     TabsPage,
     ClientesPage,
     PagosPage

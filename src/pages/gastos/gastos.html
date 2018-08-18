@@ -6,41 +6,42 @@
 -->
 <ion-header>
 
-  <ion-navbar color="primary">
-    <ion-title>gastos</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
-<ion-content padding>
-  <ion-list>
-    <ion-item>
-        <ion-label>Gastos</ion-label>
-        <ion-select (ionChange)="selectGasto($event)" [(ngModel)]="gasto">
-            <ion-option *ngFor="let gasto of gastos; let i = index" value="{{gasto.id}}">{{gasto.name}}</ion-option>
-        </ion-select>
-    </ion-item>
-    <ion-item *ngIf="gasto == 0">
-      <ion-label>Otro gasto</ion-label>
-      <ion-input type="text" [(ngModel)]="otroGasto"></ion-input>
-    </ion-item>
-    <ion-item>
-        <ion-label>Dinero</ion-label>
-        <ion-input type="number" [(ngModel)]="dinero"></ion-input>
+    <ion-navbar color="primary">
+      <ion-title>gastos</ion-title>
+    </ion-navbar>
+  
+  </ion-header>
+  
+  
+  <ion-content padding>
+    <ion-list>
+      <ion-item>
+          <ion-label>Gastos</ion-label>
+          <ion-select (ionChange)="selectGasto($event)" [(ngModel)]="gasto">
+              <ion-option *ngFor="let gasto of gastos; let i = index" value="{{gasto.id}}">{{gasto.name}}</ion-option>
+          </ion-select>
       </ion-item>
-    <button ion-button block (click)="addGasto()">Registrar gasto</button>
-  </ion-list>
-  <ion-row>
-    <ion-col>Gasto</ion-col>
-    <ion-col>Cantidad</ion-col>
-  </ion-row>
-  <ion-list>
-    <ion-item *ngFor="let gastos of listaGastos">
-      <ion-row>
-        <ion-col>{{gastos.name}}</ion-col>
-        <ion-col end>{{gastos.dinero}}</ion-col>
-      </ion-row>
-    </ion-item>
-  </ion-list>
-</ion-content>
+      <ion-item *ngIf="gasto == 0">
+        <ion-label>Otro gasto</ion-label>
+        <ion-input type="text" [(ngModel)]="otroGasto"></ion-input>
+      </ion-item>
+      <ion-item>
+          <ion-label>Dinero</ion-label>
+          <ion-input type="number" [(ngModel)]="dinero"></ion-input>
+        </ion-item>
+      <button ion-button block (click)="addGasto()">Registrar gasto</button>
+    </ion-list>
+    <ion-row>
+      <ion-col>Gasto</ion-col>
+      <ion-col>Cantidad</ion-col>
+    </ion-row>
+    <ion-list>
+      <ion-item *ngFor="let gastos of listaGastos">
+        <ion-row>
+          <ion-col>{{gastos.name}}</ion-col>
+          <ion-col end>{{gastos.dinero}}</ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
